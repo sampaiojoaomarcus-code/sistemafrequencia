@@ -127,9 +127,6 @@
 <div id="overlay-direito" class="overlay-menu" onclick="toggleMenuRight()"></div>
 
 <header class="topbar">
-    <a href="<?= base_url('login/logout') ?>" class="home-btn" title="Sair do sistema">
-        <i class="fa-solid fa-right-from-bracket"></i>
-    </a>
 
     <?php if ($perfil === 'gestão'): ?>
         <a href="javascript:void(0)" id="btn-menu-direito" onclick="toggleMenuRight()" style="color: inherit; text-decoration: none;">
@@ -141,54 +138,60 @@
 
 <div id="sidebar-direito" class="sidebar-right">
     <a href="javascript:void(0)" class="btn-fechar" onclick="toggleMenuRight()">&times;</a>
-    
+
     <div class="sidebar-header">
         <img src="<?= base_url('img/logo.png.jpeg') ?>" alt="Logo Escola" class="school-logo">
     </div>
     <div class="menu-items">
         <?php if ($perfil === 'professor'): ?>
         <a href="<?= base_url('creditos') ?> " target="_blank" class="footer-creditos-link" title="Desenvolvedores do Sistema"></a>
-    <?php endif; ?>
+        <?php endif; ?>
         <a href="<?= base_url('dashboard') ?>"><i class="fa-solid fa-house"></i>Frequência</a>
         <a href="<?= base_url('tabela') ?>"><i class="fa-solid fa-table"></i>Tabela de Justificativas</a>
         <a href="<?= base_url('alterar_turma') ?>"><i class="fa-solid fa-users-gear"></i>Alterações de Turma</a>
+        <a href="<?= base_url('login/logout') ?>" class="txt-sair" title="Sair do sistema">
+            <i class="fa-solid fa-right-from-bracket"></i>Sair da conta
+        </a>
     </div>
 </div>
 
 <script>
     const urlAtual = window.location.pathname;
-if(urlAtual === '/dashboard'){
-document.querySelector('a[href*="dashboard"]').addEventListener('click', function(e) {
-      Swal.fire({
-                    title: 'Ops!',
-                    text: 'Você já se encontra nesta tela.',
-                    icon: 'warning',
-                    showConfirmButton: false,
-                    timer: 1100
-    })
-      e.preventDefault();});
-}
-if(urlAtual === '/alterar_turma'){
-document.querySelector('a[href*="alterar_turma"]').addEventListener('click', function(e) {
-    Swal.fire({
-                    title: 'Ops!',
-                    text: 'Você já se encontra nesta tela.',
-                    icon: 'warning',
-                    showConfirmButton: false,
-                    timer: 1300
-    })
-    e.preventDefault();});
+    if (urlAtual === '/dashboard') {
+        document.querySelector('a[href*="dashboard"]').addEventListener('click', function(e) {
+            Swal.fire({
+                title: 'Ops!',
+                text: 'Você já se encontra nesta tela.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 1100
+            });
+            e.preventDefault();
+        });
     }
-if(urlAtual === '/tabela'){
-document.querySelector('a[href*="tabela"]').addEventListener('click', function(e) {
-    Swal.fire({
-                    title: 'Ops!',
-                    text: 'Você já se encontra nesta tela.',
-                    icon: 'warning',
-                    showConfirmButton: false,
-                    timer: 1300
-    })
-    e.preventDefault();});
+    if (urlAtual === '/alterar_turma') {
+        document.querySelector('a[href*="alterar_turma"]').addEventListener('click', function(e) {
+            Swal.fire({
+                title: 'Ops!',
+                text: 'Você já se encontra nesta tela.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 1300
+            });
+            e.preventDefault();
+        });
+    }
+    if (urlAtual === '/tabela') {
+        document.querySelector('a[href*="tabela"]').addEventListener('click', function(e) {
+            Swal.fire({
+                title: 'Ops!',
+                text: 'Você já se encontra nesta tela.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 1300
+            });
+            e.preventDefault();
+        });
     }
     function toggleMenuRight() {
         const sidebar = document.getElementById("sidebar-direito");
