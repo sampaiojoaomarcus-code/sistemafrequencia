@@ -28,7 +28,7 @@
         box-sizing: border-box;
     }
 
-    /* BOTÃO DOS 3 PONTINHOS (à direita, com hitbox maior) */
+    /* BOTÃO DO MENU SANDUÍCHE (gestão, à direita, com hitbox maior) */
     .btn-menu {
         margin-left: auto;          /* empurra para a direita */
         margin-right: -10px;        /* compensa a área maior, mantendo o ícone alinhado */
@@ -52,6 +52,29 @@
         font-size: 22px;
     }
 
+/* BOTÃO SAIR (conta do professor, à direita) */
+.btn-sair-topo {
+    margin-left: auto;          /* empurra para a direita */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;           /* hitbox confortável */
+    padding: 0 14px;
+    border-radius: 22px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s;
+}
+.btn-sair-topo:hover,
+.btn-sair-topo:active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+.btn-sair-topo i {
+    color: white;
+}
     .home-btn {
         background-color: white;
         color: var(--primary-dark);
@@ -155,7 +178,12 @@
 
     <?php if ($perfil === 'gestão'): ?>
         <a href="javascript:void(0)" id="btn-menu-direito" class="btn-menu" onclick="toggleMenuRight()" aria-label="Abrir menu">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
+            <i class="fa-solid fa-bars"></i>
+        </a>
+    <?php else: ?>
+        <a href="<?= base_url('login/logout') ?>" class="btn-sair-topo" title="Sair do sistema">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Sair da conta</span>
         </a>
     <?php endif; ?>
 

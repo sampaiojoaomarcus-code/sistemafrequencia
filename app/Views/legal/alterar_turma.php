@@ -36,103 +36,208 @@ $perfil = session()->get('perfil');
         .links-footer { text-align: center; margin-top: 20px; }
         .links-footer a { text-decoration: none; color: var(--text-gray); font-weight: 600; }
         .links-footer a:hover { color: var(--primary-green); }
+
+        /* AVISOS SWEETALERT (EXCLUSÃO) */
+        .swal-popup {
+            border-radius: 20px !important;
+            padding: 28px 22px !important;
+            font-family: 'Segoe UI', sans-serif !important;
+        }
+        .swal-popup .swal2-title {
+            color: var(--text-dark);
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .swal-popup .swal2-html-container {
+            color: var(--text-gray);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .swal-popup .swal2-html-container strong {
+            color: var(--text-dark);
+        }
+        .swal-btn-confirmar,
+        .swal-btn-cancelar {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 6px;
+            transition: .3s;
+        }
+        .swal-btn-confirmar { background: var(--error-red); color: white; }
+        .swal-btn-confirmar:hover { background: #c53030; }
+        .swal-btn-confirmar.laranja { background: #dd6b20; }
+        .swal-btn-confirmar.laranja:hover { background: #c05621; }
+        .swal-btn-cancelar { background: #edf2f7; color: var(--text-dark); }
+        .swal-btn-cancelar:hover { background: #e2e8f0; }
     </style>
 </head>
 <body>
 
     <?php include 'menu.php'; ?>
 
-<div class="container">
+    <div class="container">
 
-    <div class="card header-painel">
-        <i class="fa-solid fa-users-gear"></i>
-        <h1>Gerenciamento de Alunos por Turma</h1>
-    </div>
+        <div class="card header-painel">
+            <i class="fa-solid fa-users-gear"></i>
+            <h1>Gerenciamento de Alunos por Turma</h1>
+        </div>
 
-    <div class="card">
-        <form method="GET" action="<?= base_url('alterar_turma') ?>" id="formTurma">
-            <label for="selecionar_turma_id">Escolha a Turma que Deseja Alterar:</label>
-            <div style="display: flex; gap: 15px;">
-                <select name="selecionar_turma_id" id="selecionar_turma_id" required onchange="document.getElementById('formTurma').submit();">
-                    <option value="" disabled <?= ($turma_atual_id == 0) ? 'selected' : ''; ?>>Selecione...</option>
-                    <?php foreach ($turmas_lista as $t): ?>
-                        <option value="<?= $t['id']; ?>" <?= ($turma_atual_id == $t['id']) ? 'selected' : ''; ?>>
-                            <?= htmlspecialchars($t['serie'] . " — " . $t['nome']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        </form>
-    </div>
-
-    <?php if ($turma_atual_id > 0): ?>
-        <div class="grid-modos">
-            <div class="card">
-                <h2 style="font-size: 18px; color: var(--primary-green); margin-bottom: 15px;"><i class="fa-solid fa-user-minus"></i> Alunos Atuais (<?= count($alunos_turma_selecionada); ?>)</h2>
-                
-                <div class="lista-alunos">
-                    <?php if (empty($alunos_turma_selecionada)): ?>
-                        <p style="text-align: center; color: var(--text-gray); padding: 20px; font-size: 14px;">Nenhum aluno cadastrado nesta turma.</p>
-                    <?php else: ?>
-                        <?php foreach ($alunos_turma_selecionada as $aluno): ?>
-                            <div class="item-aluno">
-                                <span><?= htmlspecialchars($aluno['nome']); ?></span>
-                                <form method="POST" action="<?= base_url('alterar_turma') ?>" onsubmit="return confirm('Tem certeza que deseja remover este aluno?');">
-                                    <?= csrf_field() ?>
-                                    <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
-                                    <input type="hidden" name="aluno_id" value="<?= $aluno['id']; ?>">
-                                    <input type="hidden" name="acao" value="remover_individual">
-                                    <button type="submit" class="btn btn-danger" style="padding: 6px 10px; font-size: 12px;"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </div>
+        <div class="card">
+            <form method="GET" action="<?= base_url('alterar_turma') ?>" id="formTurma">
+                <label for="selecionar_turma_id">Escolha a Turma que Deseja Alterar:</label>
+                <div style="display: flex; gap: 15px;">
+                    <select name="selecionar_turma_id" id="selecionar_turma_id" required onchange="document.getElementById('formTurma').submit();">
+                        <option value="" disabled <?= ($turma_atual_id == 0) ? 'selected' : ''; ?>>Selecione...</option>
+                        <?php foreach ($turmas_lista as $t): ?>
+                            <option value="<?= $t['id']; ?>" <?= ($turma_atual_id == $t['id']) ? 'selected' : ''; ?>>
+                                <?= htmlspecialchars($t['serie'] . " — " . $t['nome']); ?>
+                            </option>
                         <?php endforeach; ?>
-                    <?php endif; ?>
+                    </select>
                 </div>
-                <hr style="border: 0; border-top: 2px solid #edf2f7; margin: 20px 0;">
-                <h2 style="font-size: 18px; color: var(--primary-green); margin-bottom: 15px;"><i class="fa-solid fa-user-plus"></i> Inserir Novo Aluno</h2>
-                <form method="POST" action="<?= base_url('alterar_turma') ?>" id="formAdicionarAluno">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
-                    <input type="hidden" name="acao" value="adicionar_individual">
-                    <div id="form-nome-aluno" style="margin-bottom: 15px;">
-                        <input type="text" name="nome_aluno" placeholder="Nome Completo do Aluno" required>
-                    </div>
-                    <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> Adicionar Aluno</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h2 style="font-size: 18px; color: #dd6b20; margin-bottom: 15px;"><i class="fa-solid fa-file-import"></i> Sobrescrever Turma Inteira</h2>
-                <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px; line-height: 1.5;">
-                    <strong>Atenção:</strong> Esta ação apagará todos os alunos atuais desta turma e colocará a lista nova abaixo.
-                </p>
-
-                <form method="POST" action="<?= base_url('alterar_turma') ?>" onsubmit="return confirm('ATENÇÃO: Você irá apagar TODOS os alunos atuais desta turma para inserir a nova lista. Continuar?');">
-                <?= csrf_field() ?>    
-                <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
-                    <input type="hidden" name="acao" value="sobrescrever_turma">
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label for="lista_nomes">Cole os Nomes (Um Aluno por Linha):</label>
-                        <textarea name="lista_nomes" id="lista_nomes" rows="10" placeholder="Exemplo:&#10;ANA JULIA SILVA&#10;CARLOS EDUARDO SANTOS&#10;MARCOS PEREIRA COSTA" required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn" style="background-color: #dd6b20;"><i class="fa-solid fa-rotate"></i> Substituir Lista de Alunos</button>
-                </form>
-            </div>
+            </form>
         </div>
-    <?php else: ?>
-        <div class="card" style="text-align: center; color: var(--text-gray);">
-            <i class="fa-solid fa-arrow-up" style="font-size: 30px; margin-bottom: 10px; color: var(--primary-green);"></i>
-            <p>Selecione uma turma acima para exibir as opções de gerenciamento.</p>
-        </div>
-    <?php endif; ?>
 
-    <?php include 'rodapelegal.php'; ?>
+        <?php if ($turma_atual_id > 0): ?>
+            <div class="grid-modos">
+                <div class="card">
+                    <h2 style="font-size: 18px; color: var(--primary-green); margin-bottom: 15px;"><i class="fa-solid fa-user-minus"></i> Alunos Atuais (<?= count($alunos_turma_selecionada); ?>)</h2>
 
-</div><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    <div class="lista-alunos">
+                        <?php if (empty($alunos_turma_selecionada)): ?>
+                            <p style="text-align: center; color: var(--text-gray); padding: 20px; font-size: 14px;">Nenhum aluno cadastrado nesta turma.</p>
+                        <?php else: ?>
+                            <?php foreach ($alunos_turma_selecionada as $aluno): ?>
+                                <div class="item-aluno">
+                                    <span><?= htmlspecialchars($aluno['nome']); ?></span>
+                                    <form method="POST" action="<?= base_url('alterar_turma') ?>" class="form-remover">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
+                                        <input type="hidden" name="aluno_id" value="<?= $aluno['id']; ?>">
+                                        <input type="hidden" name="acao" value="remover_individual">
+                                        <button type="button" class="btn btn-danger btn-remover" data-nome="<?= htmlspecialchars($aluno['nome']); ?>" style="padding: 6px 10px; font-size: 12px;" title="Remover aluno"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    <hr style="border: 0; border-top: 2px solid #edf2f7; margin: 20px 0;">
+                    <h2 style="font-size: 18px; color: var(--primary-green); margin-bottom: 15px;"><i class="fa-solid fa-user-plus"></i> Inserir Novo Aluno</h2>
+                    <form method="POST" action="<?= base_url('alterar_turma') ?>" id="formAdicionarAluno">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
+                        <input type="hidden" name="acao" value="adicionar_individual">
+                        <div id="form-nome-aluno" style="margin-bottom: 15px;">
+                            <input type="text" name="nome_aluno" placeholder="Nome Completo do Aluno" required>
+                        </div>
+                        <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> Adicionar Aluno</button>
+                    </form>
+                </div>
 
-       <?php if (session()->getFlashdata('sucesso')): ?>
+                <div class="card">
+                    <h2 style="font-size: 18px; color: #dd6b20; margin-bottom: 15px;"><i class="fa-solid fa-file-import"></i> Sobrescrever Turma Inteira</h2>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px; line-height: 1.5;">
+                        <strong>Atenção:</strong> Esta ação apagará todos os alunos atuais desta turma e colocará a lista nova abaixo.
+                    </p>
+
+                    <form method="POST" action="<?= base_url('alterar_turma') ?>" id="formSobrescrever">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="turma_id" value="<?= $turma_atual_id; ?>">
+                        <input type="hidden" name="acao" value="sobrescrever_turma">
+
+                        <div style="margin-bottom: 15px;">
+                            <label for="lista_nomes">Cole os Nomes (Um Aluno por Linha):</label>
+                            <textarea name="lista_nomes" id="lista_nomes" rows="10" placeholder="Exemplo:&#10;ANA JULIA SILVA&#10;CARLOS EDUARDO SANTOS&#10;MARCOS PEREIRA COSTA" required></textarea>
+                        </div>
+
+                        <button type="button" id="btnSobrescrever" class="btn" style="background-color: #dd6b20;"><i class="fa-solid fa-rotate"></i> Substituir Lista de Alunos</button>
+                    </form>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="card" style="text-align: center; color: var(--text-gray);">
+                <i class="fa-solid fa-arrow-up" style="font-size: 30px; margin-bottom: 10px; color: var(--primary-green);"></i>
+                <p>Selecione uma turma acima para exibir as opções de gerenciamento.</p>
+            </div>
+        <?php endif; ?>
+
+        <?php include 'rodapelegal.php'; ?>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Evita que o nome do aluno seja interpretado como HTML dentro do aviso
+        function escaparHtml(texto) {
+            const div = document.createElement('div');
+            div.textContent = texto;
+            return div.innerHTML;
+        }
+
+        // Remover aluno individual
+        document.querySelectorAll('.btn-remover').forEach(function (botao) {
+            botao.addEventListener('click', function () {
+                const form = botao.closest('form');
+                const nome = escaparHtml(botao.dataset.nome);
+
+                Swal.fire({
+                    title: 'Remover aluno?',
+                    html: 'Você está prestes a remover <strong>' + nome + '</strong> da turma.<br>Essa ação não pode ser desfeita.',
+                    icon: 'warning',
+                    iconColor: '#e53e3e',
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa-solid fa-trash"></i>&nbsp; Remover',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    buttonsStyling: false,
+                    focusCancel: true,
+                    customClass: {
+                        popup: 'swal-popup',
+                        confirmButton: 'swal-btn-confirmar',
+                        cancelButton: 'swal-btn-cancelar'
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+        });
+
+        // Sobrescrever turma inteira
+        const btnSobrescrever = document.getElementById('btnSobrescrever');
+        if (btnSobrescrever) {
+            btnSobrescrever.addEventListener('click', function () {
+                const form = document.getElementById('formSobrescrever');
+                if (!form.reportValidity()) return; // respeita o "required" do textarea
+
+                Swal.fire({
+                    title: 'Substituir a turma inteira?',
+                    html: 'Todos os alunos atuais desta turma serão <strong>apagados</strong> e substituídos pela lista nova.',
+                    icon: 'warning',
+                    iconColor: '#dd6b20',
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa-solid fa-rotate"></i>&nbsp; Substituir',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    buttonsStyling: false,
+                    focusCancel: true,
+                    customClass: {
+                        popup: 'swal-popup',
+                        confirmButton: 'swal-btn-confirmar laranja',
+                        cancelButton: 'swal-btn-cancelar'
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+        }
+    </script>
+
+    <?php if (session()->getFlashdata('sucesso')): ?>
     <script>
         Swal.fire({
             icon: 'success',
@@ -143,18 +248,16 @@ $perfil = session()->get('perfil');
         });
     </script>
     <?php elseif (session()->getFlashdata('erro')): ?>
-        <script>
-            Swal.fire({
-                icon: 'error',
-                width: 400,
-                title: 'Erro!',
-                text: '<?= session()->getFlashdata('erro') ?>',
-                confirmButtonColor: '#e53e3e'
-            });
-        </script>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            width: 400,
+            title: 'Erro!',
+            text: '<?= session()->getFlashdata('erro') ?>',
+            confirmButtonColor: '#e53e3e'
+        });
+    </script>
     <?php endif; ?>
 
 </body>
 </html>
-
-
