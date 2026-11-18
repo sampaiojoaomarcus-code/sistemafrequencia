@@ -27,6 +27,31 @@
         z-index: 997; /* Garante que fique acima do conteúdo, mas abaixo da sidebar */
         box-sizing: border-box;
     }
+
+    /* BOTÃO DOS 3 PONTINHOS (à direita, com hitbox maior) */
+    .btn-menu {
+        margin-left: auto;          /* empurra para a direita */
+        margin-right: -10px;        /* compensa a área maior, mantendo o ícone alinhado */
+        width: 52px;
+        height: 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.2s;
+    }
+    .btn-menu:hover,
+    .btn-menu:active {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+    .btn-menu i {
+        font-size: 22px;
+    }
+
     .home-btn {
         background-color: white;
         color: var(--primary-dark);
@@ -129,8 +154,8 @@
 <header class="topbar">
 
     <?php if ($perfil === 'gestão'): ?>
-        <a href="javascript:void(0)" id="btn-menu-direito" onclick="toggleMenuRight()" style="color: inherit; text-decoration: none;">
-            <i class="fa-solid fa-ellipsis-vertical" style="font-size: 20px; cursor: pointer;"></i>
+        <a href="javascript:void(0)" id="btn-menu-direito" class="btn-menu" onclick="toggleMenuRight()" aria-label="Abrir menu">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
         </a>
     <?php endif; ?>
 
