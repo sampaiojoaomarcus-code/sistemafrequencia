@@ -7,178 +7,381 @@
     <link rel="icon" href="<?= base_url('img/logo_WR.png') ?>" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary-green: #3b8540; --primary-green-hover: #2c6b30; --bg-light: #f4f7f6; --text-gray: #718096; --input-border: #e2e8f0; }
+        :root {
+            --primary-green: #3b8540;
+            --primary-green-hover: #2c6b30;
+            --dark-green: #2e5343;
+            --bg-light: #f4f7f6;
+            --text-dark: #2d3748;
+            --text-gray: #718096;
+            --input-border: #e2e8f0;
+            --error-bg: #fff5f5;
+            --error-border: #fed7d7;
+            --error-text: #c53030;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: var(--bg-light); display: flex; justify-content: center; align-items: center; min-height: 100vh; background-image: radial-gradient(circle at 10% 20%, rgb(240, 246, 240) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgb(240, 246, 240) 0%, transparent 20%); }
-        .login-card { background-color: white; width: 100%; max-width: 400px; border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); text-align: center; }
-        .logo-container { width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; background-color: #e8f5e9; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 4px solid #c8e6c9; }
-        .logo-container img { width: 100%; height: auto; object-fit: contain; }
-        h1 { color: var(--primary-green); font-size: 28px; margin-bottom: 8px; }
-        p.subtitle { color: var(--text-gray); font-size: 15px; margin-bottom: 30px; }
-        
-        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
-        .input-group i.fa-solid { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary-green); font-size: 18px; pointer-events: none; }
-        
-        select, input[type="password"] {
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-dark);
+        }
+
+        /* CARTÃO PRINCIPAL (2 PAINÉIS) */
+        .login-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             width: 100%;
-            padding: 16px 20px 16px 50px;
-            border-radius: 50px;
-            border: 1px solid var(--primary-green);
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s;
-            color: var(--primary-green);
-            font-weight: 600;
-            background-color: white;
-            cursor: pointer;
-            appearance: none; 
-            background: white url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="%233b8540"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>') no-repeat right 20px center;
-            background-size: 10px;
-        }
-        #senha {
-            width: 100%;
-            padding: 16px 50px 16px 50px;
-            border-radius: 50px;
-            border: 1px solid var(--input-border);
-            font-size: 15px;
-            outline: none;
-        }
-        #senha:hover {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(59, 133, 64, 0.1);
-        }
-
-        select:disabled { border-color: var(--input-border); color: var(--text-gray); cursor: not-allowed; opacity: 0.7; background-image: none; }
-        input[type="password"] { border: 1px solid var(--input-border); color: #2d3748; font-weight: normal; background-image: none; }
-        input[type="password"]:focus, select:focus { border-color: var(--primary-green); box-shadow: 0 0 0 3px rgba(59, 133, 64, 0.1); }
-        input[type="password"]::placeholder { color: #a0aec0; }
-
-        .options-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-size: 13px; }
-        .checkbox-container { display: flex; align-items: center; gap: 8px; color: var(--primary-green); cursor: pointer; font-size: 15px; font-weight: 500; }
-        .forgot-password { color: var(--primary-green); text-decoration: none; font-weight: 500; font-size: 15px; }
-        .btn-submit { width: 100%; background-color: var(--primary-green); color: white; border: none; border-radius: 50px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
-        .btn-submit:hover { background-color: var(--primary-green-hover); }
-        
-        .olho {
-            position: absolute;
-            right: 20px !important;
-            left: auto !important;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--primary-green);
-            pointer-events: auto !important;
-            z-index: 10;
-            transition: all 0.2s;
-        }
-        .fa-eye { color: var(--primary-green); }
-        .fa-eye-slash { color: #1f4d24; }
-
-        .checkbox-container input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #3b8540;
-            border-radius: 3px;
+            max-width: 900px;
             background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
         }
-        .checkbox-container input[type="checkbox"]:hover { box-shadow: 0 0 0 3px rgba(59, 133, 64, 0.15); }
-        .checkbox-container input[type="checkbox"]:checked { background: #3b8540; position: relative; }
-        .checkbox-container input[type="checkbox"]:checked::after {
-            content: "✓";
+
+        /* PAINEL ESQUERDO (IDENTIDADE) */
+        .brand-panel {
+            background: linear-gradient(160deg, var(--dark-green) 0%, var(--primary-green) 100%);
             color: white;
-            font-size: 12px;
-            font-weight: bold;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -55%);
+            padding: 48px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
-        
-        /* Box de Alerta de Erro */
+        .brand-panel::before,
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .brand-panel::before { width: 260px; height: 260px; top: -90px; right: -90px; }
+        .brand-panel::after { width: 200px; height: 200px; bottom: -70px; left: -70px; }
+        .brand-content { position: relative; z-index: 1; }
+
+        .logo-container {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 4px solid rgba(255, 255, 255, 0.35);
+            margin-bottom: 28px;
+        }
+        .logo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .brand-panel h2 { font-size: 26px; line-height: 1.25; font-weight: 700; margin-bottom: 12px; }
+        .brand-panel .brand-desc { font-size: 15px; line-height: 1.6; color: rgba(255, 255, 255, 0.85); }
+        .brand-footer { position: relative; z-index: 1; font-size: 12px; color: rgba(255, 255, 255, 0.65); }
+
+        /* PAINEL DIREITO (FORMULÁRIO) */
+        .form-panel {
+            padding: 48px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-panel h1 { font-size: 26px; color: var(--text-dark); font-weight: 700; margin-bottom: 6px; }
+        .form-panel p.subtitle { color: var(--text-gray); font-size: 15px; margin-bottom: 28px; }
+
+        /* ALERTA DE ERRO */
         .alert-error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 12px;
-            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--error-text);
+            background-color: var(--error-bg);
+            border: 1px solid var(--error-border);
+            padding: 12px 14px;
+            border-radius: 10px;
             margin-bottom: 20px;
             font-size: 14px;
+            line-height: 1.4;
         }
-        
-        @media (max-width: 480px) { .login-card { padding: 30px 20px; border-radius: 0; box-shadow: none; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; } }
+        .alert-error i { margin-top: 2px; }
+
+        /* CAMPOS */
+        .field { margin-bottom: 20px; }
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .input-group { position: relative; }
+        .input-group .icon-left {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+            font-size: 15px;
+            pointer-events: none;
+        }
+        .input-group .icon-right {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        select,
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 44px;
+            border-radius: 10px;
+            border: 1.5px solid var(--input-border);
+            background-color: #fff;
+            font-size: 15px;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+        select:invalid { color: #a0aec0; }
+        select option { color: var(--text-dark); }
+        input::placeholder { color: #a0aec0; }
+        select:hover,
+        input:hover { border-color: #cbd5e0; }
+        select:focus,
+        input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(59, 133, 64, 0.12);
+        }
+        select:disabled { background-color: #f7fafc; cursor: not-allowed; opacity: 0.7; }
+
+        /* BOTÃO MOSTRAR SENHA */
+        .toggle-senha {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .toggle-senha:hover { color: var(--primary-green); background-color: rgba(59, 133, 64, 0.08); }
+        .toggle-senha:focus-visible { outline: 2px solid var(--primary-green); }
+
+        /* AVISO CAPS LOCK */
+        .caps-aviso {
+            display: none;
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: #b7791f;
+            align-items: center;
+            gap: 6px;
+        }
+        .caps-aviso.visivel { display: flex; }
+
+        /* BOTÃO ENTRAR */
+        .btn-submit {
+            width: 100%;
+            margin-top: 6px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+        .btn-submit:hover { background-color: var(--primary-green-hover); box-shadow: 0 6px 16px rgba(59, 133, 64, 0.25); }
+        .btn-submit:active { transform: translateY(1px); }
+        .btn-submit:disabled { opacity: 0.75; cursor: wait; box-shadow: none; }
+
+        .form-footer {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid #edf2f7;
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--text-gray);
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 820px) {
+            body { padding: 0; align-items: stretch; background: white; }
+            .login-wrapper {
+                grid-template-columns: 1fr;
+                max-width: none;
+                border-radius: 0;
+                box-shadow: none;
+                grid-template-rows: auto 1fr;
+            }
+            .brand-panel {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 16px;
+                padding: 24px 22px;
+            }
+            .brand-panel::before, .brand-panel::after { display: none; }
+            .brand-content { display: flex; align-items: center; gap: 16px; }
+            .logo-container { width: 60px; height: 60px; margin-bottom: 0; border-width: 3px; flex-shrink: 0; }
+            .brand-panel h2 { font-size: 17px; margin-bottom: 0; }
+            .brand-panel .brand-desc,
+            .brand-footer { display: none; }
+            .form-panel { padding: 32px 22px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="logo-container">
-            <img src="<?= base_url('img/logo.png.jpeg') ?>" alt="Logo">
-        </div>
+    <div class="login-wrapper">
 
-        <h1>Bem-vindo(a)!</h1>
-        <p class="subtitle">Faça login para continuar</p>
-
-        <!-- Exibe mensagem de erro se a senha/turma estiver errada -->
-        <?php if (session()->getFlashdata('erro')): ?>
-            <div class="alert-error">
-                <?= session()->getFlashdata('erro') ?>
+        <!-- PAINEL DA ESCOLA -->
+        <aside class="brand-panel">
+            <div class="brand-content">
+                <div class="logo-container">
+                    <img src="<?= base_url('img/logo.png.jpeg') ?>" alt="Logo da escola">
+                </div>
+                <div>
+                    <h2>EEEP Walter Ramos de Araújo</h2>
+                    <p class="brand-desc">Sistema de controle de frequência escolar. Acesse para registrar e acompanhar a presença dos alunos.</p>
+                </div>
             </div>
-        <?php endif; ?>
+            <div class="brand-footer">&copy; <?= date('Y') ?> EEEP Walter Ramos de Araújo</div>
+        </aside>
 
-        <form id="loginForm" action="<?= base_url('login/processar') ?>" method="POST">
-            <?= csrf_field() ?>
-            <div class="input-group">
-                <i class="fa-solid fa-users"></i>
-                <select id="turma" name="turma" disabled required>
-                    <option value="" disabled selected>Carregando opções...</option>
-                </select>
+        <!-- PAINEL DO FORMULÁRIO -->
+        <main class="form-panel">
+            <h1>Bem-vindo(a)!</h1>
+            <p class="subtitle">Faça login para continuar</p>
+
+            <!-- Exibe mensagem de erro se a senha/turma estiver errada -->
+            <?php if (session()->getFlashdata('erro')): ?>
+                <div class="alert-error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span><?= session()->getFlashdata('erro') ?></span>
+                </div>
+            <?php endif; ?>
+
+            <form id="loginForm" action="<?= base_url('login/processar') ?>" method="POST">
+                <?= csrf_field() ?>
+
+                <div class="field">
+                    <label for="turma">Cargo</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-users icon-left"></i>
+                        <select id="turma" name="turma" disabled required>
+                            <option value="" disabled selected>Carregando opções...</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down icon-right"></i>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="senha">Senha</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock icon-left"></i>
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" autocomplete="current-password" required>
+                        <button type="button" class="toggle-senha" id="toggleSenha" aria-label="Mostrar senha" title="Mostrar senha">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="caps-aviso" id="capsAviso">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Caps Lock está ativado
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnEntrar">
+                    <span>Entrar</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                Em caso de problemas de acesso, procure a gestão da escola.
             </div>
-
-            <div class="input-group">
-                <i class="fa-solid fa-lock lock-icon"></i>
-                <input type="password" id="senha" name="senha" placeholder="Senha" required>
-                <i class="fa-solid fa-eye olho" onclick="mostrarSenha(this)"></i>
-            </div>
-
-
-            
-            <button type="submit" class="btn-submit">Entrar</button>
-        </form>
+        </main>
     </div>
 
     <script>
-        function mostrarSenha(icone) {
-            const campo = document.getElementById("senha");
+        // Mostrar / ocultar senha
+        const campoSenha = document.getElementById('senha');
+        const botaoOlho = document.getElementById('toggleSenha');
 
-            if (campo.type === "password") {
-                campo.type = "text";
-                icone.classList.remove("fa-eye");
-                icone.classList.add("fa-eye-slash");
-            } else {
-                campo.type = "password";
-                icone.classList.remove("fa-eye-slash");
-                icone.classList.add("fa-eye");
+        botaoOlho.addEventListener('click', function () {
+            const icone = botaoOlho.querySelector('i');
+            const mostrando = campoSenha.type === 'text';
+
+            campoSenha.type = mostrando ? 'password' : 'text';
+            icone.classList.toggle('fa-eye', mostrando);
+            icone.classList.toggle('fa-eye-slash', !mostrando);
+
+            const texto = mostrando ? 'Mostrar senha' : 'Ocultar senha';
+            botaoOlho.setAttribute('aria-label', texto);
+            botaoOlho.setAttribute('title', texto);
+        });
+
+        // Aviso de Caps Lock
+        const capsAviso = document.getElementById('capsAviso');
+        function verificarCaps(e) {
+            if (typeof e.getModifierState === 'function') {
+                capsAviso.classList.toggle('visivel', e.getModifierState('CapsLock'));
             }
         }
+        campoSenha.addEventListener('keydown', verificarCaps);
+        campoSenha.addEventListener('keyup', verificarCaps);
+        campoSenha.addEventListener('blur', function () { capsAviso.classList.remove('visivel'); });
 
         // Recebe o array $turmas_db enviado do Controller Login::index
-        const dadosBanco = <?= json_encode($turmas_db ?? []) ?>;
+        const dadosBanco = <?= json_encode($turmas_db ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         const selectTurma = document.getElementById('turma');
 
         selectTurma.disabled = false;
         selectTurma.innerHTML = '<option value="" disabled selected>Selecionar Cargo</option>';
 
         // Preenche o campo select com os dados vindos do banco
-        dadosBanco.forEach(turma => {
-            let opcao = document.createElement('option');
-            opcao.value = turma.id; 
-            opcao.textContent = `${turma.nome}`;
+        dadosBanco.forEach(function (turma) {
+            const opcao = document.createElement('option');
+            opcao.value = turma.id;
+            opcao.textContent = turma.nome;
             selectTurma.appendChild(opcao);
         });
-    </script> 
+
+        // Estado de carregamento ao enviar
+        const formLogin = document.getElementById('loginForm');
+        const btnEntrar = document.getElementById('btnEntrar');
+
+        formLogin.addEventListener('submit', function () {
+            btnEntrar.disabled = true;
+            btnEntrar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Entrando...</span>';
+        });
+
+        // Se o usuário voltar pelo botão "voltar" do navegador, restaura o botão
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) {
+                btnEntrar.disabled = false;
+                btnEntrar.innerHTML = '<span>Entrar</span><i class="fa-solid fa-arrow-right-to-bracket"></i>';
+            }
+        });
+    </script>
 </body>
 </html>
